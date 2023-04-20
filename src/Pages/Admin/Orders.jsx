@@ -45,7 +45,6 @@ const Orders = () => {
       }
     );
     const res = await data.json();
-    console.log("status", res);
     if (res?.message) {
       toast.success(res?.message);
       const newOrders = orders.map((order) => {
