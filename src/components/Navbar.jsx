@@ -21,7 +21,6 @@ const Navbar = ({ scrollToTop }) => {
       })
       const data = await res.json()
       setType(data?.type)
-      console.log(data)
     }
   }
   useEffect(() => {
