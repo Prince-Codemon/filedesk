@@ -688,6 +688,9 @@ a.u-f-b:hover {
   .card_tools {
     margin-left: 1rem !important;
   }
+  .upload-btn{
+    margin: 4rem 1.3rem!important;
+  }
   .ring,
   .dot {
     display: none;
@@ -695,5 +698,33 @@ a.u-f-b:hover {
   .addressDetails {
     padding: 1rem 0 !important;
     margin: 2rem 0 !important;
+  }
+  .adminorders tbody{
+    margin: 2rem 0;
+  }
+  .adminorders th{
+    display: none;
+  }
+  .adminorders tr{
+    display: grid;
+  }
+  .adminorders td{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    text-transform: capitalize;
+  }
+  .adminorders td:before{
+    content: attr(data-cell) ": ";
+    font-weight: bold;
+    display: block;
+  }
+  .adminorders .time{
+    margin: .7rem 0!important;
+  }
+  .adminorders .totalprice{
+    margin-bottom: .4rem!important;
+  }
+  .adminorders .status{
+    margin-bottom: .7rem!important;
   }
 }
