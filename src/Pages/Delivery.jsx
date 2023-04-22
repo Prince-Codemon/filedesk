@@ -256,7 +256,7 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
             setPaymentLoading(false);
             toast.success("Payment Successful");
             navigate("/orders");
-            DeleteAllFiles();
+            // DeleteAllFiles();
           } else {
             toast.error("Payment Failed");
           }
@@ -281,7 +281,15 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
   };
 
   const handleOrder = async () => {
-    if (!address.name || !address.phone || !address.address || !address.block) {
+    if(totalFiles < 1){
+      toast.error("Please select a file");
+      return;
+    }
+    if(!address.block){
+      toast.error("Please Select the Block");
+      return;
+    }
+    if (!address.name || !address.phone || !address.address) {
       toast.error("Please fill the Address Details");
       return;
     }
@@ -315,7 +323,6 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
       })
     );
 
-    console.log(data);
     try {
       const response = await fetch(
         `${process.env.REACT_APP_SERVER_URL}/api/createorder`,
@@ -354,7 +361,6 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
       } else {
         console.log(response.msg);
         toast.success(`Order Placed Successfully`);
-        // DeleteAllFiles();
       }
     } catch (error) {
       console.log(error);
@@ -391,7 +397,7 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="my-4 fw-bold jsf stroke ls-2 fw-light fs-3 center"
+              className="my-4 fw-bold jsf stroke ls-2 fw-light fs-2 center"
             >
               Order Document
             </motion.div>
@@ -404,7 +410,7 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
                     <motion.label
                       whileHover={{ scale: 1.2 }}
                       htmlFor="formFileLg"
-                      className="u-f-b fa-beat choosefile d-flex align-items-center justify-content-around"
+                      className="u-f-b upload-btn-animation choosefile d-flex align-items-center justify-content-around"
                     >
                       <i className="fa-solid fa-beat fa-upload"></i>
                       Upload Files
@@ -414,7 +420,7 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
                         id="formFileLg"
                         type="file"
                         onChange={handleFileChange}
-                        accept ="application/pdf, .pdf"
+                        accept="application/pdf, .pdf"
                       />
                     </motion.label>
                   ) : null}
@@ -826,7 +832,7 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
                       <motion.label
                         whileHover={{ scale: 1.2 }}
                         htmlFor="formFileLg"
-                        className="u-f-b  d-flex align-items-center justify-content-around"
+                        className="u-f-b upload-btn-animation d-flex align-items-center justify-content-around"
                         style={{ width: "11rem" }}
                       >
                         <i className="fas fa-circle-plus fa-beat p-2"></i>
@@ -860,7 +866,11 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
             {/*  ----------- Prices Chart------------ */}
             {token && (
               <>
-                <div className="col-lg-4 col-sm-12 jsf my-5 price_chart">
+                <div
+                  className={`col-lg-4 col-sm-12 jsf my-5 price_chart ${
+                    window.innerWidth < 500 && "d-none"
+                  }`}
+                >
                   <h2 className="text-center  ls-2 fw-bold stroke pop">
                     Prices Chart
                   </h2>
@@ -903,6 +913,7 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
                                 onChange={handleAddress}
                                 name="name"
                                 required
+
                               />
                               <span className="placeholder">Name</span>
                             </label>
@@ -919,13 +930,14 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
                             >
                               <input
                                 id="phone"
-                                type="number"
+                                type="tel"
                                 placeholder=" "
                                 className="addressInput mx-1 shadow-out"
                                 value={address.phone}
                                 onChange={handleAddress}
                                 required
                                 name="phone"
+                                maxLength="10"
                               />
                               <span className="placeholder">Phone no</span>
                             </label>
@@ -1063,7 +1075,7 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
                           </p>
                         ) : null}
                         <button
-                          disabled={totalPrice < 50 || paymentLoading}
+                          // disabled={totalPrice < 50 || paymentLoading}
                           onClick={handleOrder}
                           className="shadow-btn shadow-out dim fw-bold"
                         >
@@ -1081,6 +1093,23 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
                     </div>
                   </div>
                 </div>
+                {window.innerWidth < 500 && (
+                  <div className="col-lg-4 col-sm-12 jsf my-5 price_chart">
+                    <h2 className="text-center  ls-2 fw-bold stroke pop">
+                      Prices Chart
+                    </h2>
+
+                    <BindingCharges
+                      spiral={shop?.spiralPrice}
+                      cover={shop?.coverPrice}
+                    />
+                    <PaperCharges
+                      bwSingle={shop?.bwSingle}
+                      bwDouble={shop?.bwDouble}
+                      color={shop?.colorPrice}
+                    />
+                  </div>
+                )}
               </>
             )}
           </div>

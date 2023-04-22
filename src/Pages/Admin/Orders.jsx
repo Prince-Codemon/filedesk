@@ -245,15 +245,7 @@ const Orders = () => {
                                     </button>
                                   </div>
                                 ) : null}
-                                {/* ---------Payment Null or order completed ? Delete Order  */}
-                                {/* {order?.orderPaymentId === null && (
-                                  <button
-                                    className="col-lg-2 btn btn-outline-danger"
-                                    onClick={() => deleteOrder(order?.orderId)}
-                                  >
-                                    {deleteloading ? "Deleting..." : "Deny Order"}
-                                  </button>
-                                )} */}
+                                
                               </div>
                             </div>
 

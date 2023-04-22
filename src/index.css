@@ -377,18 +377,17 @@ input::-webkit-inner-spin-button {
   border: 2px solid var(--primary);
   box-shadow: var(--shadow-in);
 }
-.dropdown-mobile{
-  top: .8rem;
+.dropdown-mobile {
+  top: 0.8rem;
   right: 1rem;
   /* box-shadow: none!important; */
   /* bottom: .5rem; */
 }
 
-.dropdown-pc{
+.dropdown-pc {
   right: 2rem;
   /* bottom: 1rem; */
-  top: .8rem;
-
+  top: 0.8rem;
 }
 @keyframes loading {
   0% {
@@ -402,7 +401,6 @@ input::-webkit-inner-spin-button {
   margin: 4rem 5rem;
   padding: 1rem 3rem;
   color: rgba(0, 0, 0, 0.76);
- 
 }
 input {
   cursor: pointer;
@@ -436,7 +434,7 @@ input {
 }
 .pricearrowUp {
   border-radius: 6px;
-  padding: .7rem .6rem!important;
+  padding: 0.7rem 0.6rem !important;
   right: 5rem;
   position: fixed;
   bottom: 10rem;
@@ -595,6 +593,45 @@ a.u-f-b:hover {
   background: #dc3545;
   color: #ffffff !important;
 }
+
+.upload-btn-animation {
+  animation-name: upload-btn-animation;
+  animation-delay: 500ms;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+.modal_wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(3px);
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999999;
+}
+.modal_content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--greyLight-1);
+  padding: 1rem;
+  border-radius: 5px;
+  width: 56%;
+  box-shadow: var(--shadow-in);
+}
+
+@keyframes upload-btn-animation {
+  0%,
+  90% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.12);
+  }
+}
+
 @media screen and (max-width: 450px) {
   .delivery_header {
     margin: 0.5rem 0.4rem;
@@ -657,7 +694,6 @@ a.u-f-b:hover {
     z-index: 111111;
     backdrop-filter: blur(10px);
   }
-  
 
   .pricearrowUp {
     right: 1.8rem;
@@ -684,12 +720,25 @@ a.u-f-b:hover {
   }
 }
 
+.adminorders td {
+  word-wrap: break-word;
+}
+.file_container {
+  max-height: 10rem;
+  overflow-y: scroll;
+  border-radius: 4px;
+  padding: .5rem;
+  
+}
+.user_address{
+  margin: 2rem 0 0 0;
+}
 @media screen and (max-width: 450px) {
   .card_tools {
     margin-left: 1rem !important;
   }
-  .upload-btn{
-    margin: 4rem 1.3rem!important;
+  .upload-btn {
+    margin: 4rem 1.3rem !important;
   }
   .ring,
   .dot {
@@ -699,32 +748,36 @@ a.u-f-b:hover {
     padding: 1rem 0 !important;
     margin: 2rem 0 !important;
   }
-  .adminorders tbody{
+  .adminorders tbody {
     margin: 2rem 0;
   }
-  .adminorders th{
+  .adminorders th {
     display: none;
   }
-  .adminorders tr{
+  .adminorders tr {
     display: grid;
   }
-  .adminorders td{
+  .adminorders td {
     display: grid;
     grid-template-columns: 50% 50%;
     text-transform: capitalize;
   }
-  .adminorders td:before{
+  .adminorders td:before {
     content: attr(data-cell) ": ";
     font-weight: bold;
     display: block;
+    color: var(--primary);
   }
-  .adminorders .time{
-    margin: .7rem 0!important;
+  .adminorders .time {
+    margin: 0.7rem 0 !important;
   }
-  .adminorders .totalprice{
-    margin-bottom: .4rem!important;
+  .adminorders .totalprice {
+    margin-bottom: 0.4rem !important;
   }
-  .adminorders .status{
-    margin-bottom: .7rem!important;
+  .adminorders .status {
+    margin-bottom: 0.7rem !important;
+  }
+  .modal_content {
+    width: 91%;
   }
 }
