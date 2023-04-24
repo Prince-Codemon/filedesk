@@ -70,7 +70,7 @@ const Orders = () => {
                         Total Files: {order?.orderTotalFiles}
                       </div>
                       <div className="col-2 center">
-                        <i className="fa-solid fa-greater-than  dim"></i>
+                        <i className="fa-solid fa-greater-than fa-beat dim"></i>
                       </div>
                     </div>
                     <hr />
