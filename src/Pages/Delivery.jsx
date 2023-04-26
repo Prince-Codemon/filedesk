@@ -252,11 +252,9 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
           );
           const verifyData = await verifyResponse.json();
           if (verifyData?.data === "Payment Successful") {
-            console.log(verifyData);
             setPaymentLoading(false);
             toast.success("Payment Successful");
             navigate("/orders");
-            // DeleteAllFiles();
           } else {
             toast.error("Payment Failed");
           }
@@ -281,16 +279,20 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
   };
 
   const handleOrder = async () => {
-    if(totalFiles < 1){
+    if (totalFiles < 1) {
       toast.error("Please select a file");
       return;
     }
-    if(!address.block){
-      toast.error("Please Select the Block");
+    if (totalPrice < 50) {
+      toast.error("Please shop above 50 rupees");
       return;
     }
     if (!address.name || !address.phone || !address.address) {
       toast.error("Please fill the Address Details");
+      return;
+    }
+    if (!address.block) {
+      toast.error("Please Select the Block");
       return;
     }
     if (nameError) {
@@ -344,8 +346,7 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
         }
       );
       const res = await response.json();
-      console.log("___ Response ___");
-      console.log(res);
+
       if (res?.error) {
         setPaymentLoading(false);
         toast.error(res?.error);
@@ -913,7 +914,6 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
                                 onChange={handleAddress}
                                 name="name"
                                 required
-
                               />
                               <span className="placeholder">Name</span>
                             </label>
