@@ -766,7 +766,6 @@ a.u-f-b:hover {
     content: attr(data-cell) ": ";
     font-weight: bold;
     display: block;
-    color: var(--primary);
   }
   .adminorders .time {
     margin: 0.7rem 0 !important;

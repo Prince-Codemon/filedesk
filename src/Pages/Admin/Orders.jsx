@@ -12,6 +12,7 @@ const Orders = () => {
   const [deleteloading, setdeleteloading] = useState(false);
   const [loadingstatus, setloadingstatus] = useState(false);
   const token = getToken();
+  
   const fetchOrders = async () => {
     setloading(true);
     const data = await fetch(
@@ -28,7 +29,6 @@ const Orders = () => {
 
     setloading(false);
     const res = await data.json();
-    // console.log(res);
     if (res?.orders) {
       setOrders(res?.orders);
       setMainOrders(res?.orders);
@@ -48,6 +48,8 @@ const Orders = () => {
       }
     );
     const res = await data.json();
+
+    setloadingstatus(false);
 
     if (res?.message) {
       toast.success(res?.message);
@@ -96,11 +98,11 @@ const Orders = () => {
       <div className="row center">
         <Dashboard />
         <div className="row d-flex align-items-center justify-content-around">
-          <div className="col-4">
+          <div className="col-lg-4 col-sm-12">
             <h4 className="center fs-3 dim my-4 fw-bold">All Orders</h4>
           </div>
           {/* -------Fiter Order---------- */}
-          <div className="col-4">
+          <div className="col-8 col-lg-4">
             <div className="row">
               <select
                 className="form-select bg-color"
@@ -109,12 +111,10 @@ const Orders = () => {
                 defaultValue={"all"}
                 onChange={(e) => {
                   const filter = e.target.value;
-                  // console.log(filter);
 
                   if (filter === "all") {
                     setOrders(mainOrders);
                   } else {
-                    // console.log(mainOrders);
                     const filtered = mainOrders.filter(
                       (order) =>
                         order.deliveryType === filter ||
@@ -244,7 +244,6 @@ const Orders = () => {
                                     </button>
                                   </div>
                                 ) : null}
-                                
                               </div>
                             </div>
 
@@ -378,24 +377,22 @@ const Orders = () => {
                                               {item.quantity}
                                             </td>
                                             <td data-cell="B&W">
-                                              {item.blackandwhite
-                                                ? "YES"
-                                                : "NO"}
+                                              {item.blackandwhite ? "✅" : "❌"}
                                             </td>
                                             <td data-cell="color">
-                                              {item.color ? "YES" : "NO"}
+                                              {item.color ? "✅" : "❌"}
                                             </td>
                                             <td data-cell="spiral">
-                                              {item.spiral ? "YES" : "NO"}
+                                              {item.spiral ? "✅" : "❌"}
                                             </td>
                                             <td data-cell="cover">
-                                              {item.cover ? "YES" : "NO"}
+                                              {item.cover ? "✅" : "❌"}
                                             </td>
                                             <td data-cell="single side">
-                                              {item.singleSide ? "YES" : "NO"}
+                                              {item.singleSide ? "✅" : "❌"}
                                             </td>
                                             <td data-cell="both side">
-                                              {item.bothSide ? "YES" : "NO"}
+                                              {item.bothSide ? "✅" : "❌"}
                                             </td>
                                           </tr>
                                         </tbody>

@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import getToken from "../../utils/getToken";
 import moment from "moment";
 import { HashLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
 
 const Orders = () => {
+  const modalRef = useRef(null);
   const [orders, setOrders] = useState([]);
+  const [mainOrders, setMainOrders] = useState();
+
   const [loading, setLoading] = useState(false);
   const [showModalIndex, setShowModalIndex] = useState(null);
 
@@ -25,29 +28,66 @@ const Orders = () => {
     );
     const res = await data.json();
     setLoading(false);
-    // console.log(res);
     if (res?.orders) {
       setOrders(res?.orders);
+      setMainOrders(res?.orders);
     }
   };
   useEffect(() => {
     document.title = "FileDesk | Dashboard | Orders";
     fetchOrders();
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
-  // console.log("----->", orders);
-
-  const Modal = ({ order }) => {
-    return (
-      <div className="modal">
-        <p>Total Files: {order.orderTotalFiles}</p>
-        <p>Total Price: {order.orderTotal}</p>
-      </div>
-    );
-  };
+  function handleClickOutside(event) {
+    if (modalRef.current && !modalRef.current.contains(event.target)) {
+      console.log("heel");
+      setShowModalIndex(null);
+    }
+  }
 
   return (
     <div className="container adminorders my-5">
-      <h4 className="center fs-3 ls-2 stroke my-4">Your Orders</h4>
+      <div className="row d-flex align-items-center justify-content-around">
+        <div className="col-lg-4 col-sm-12">
+          <h4 className="center fs-3 dim my-4 fw-bold">Your Orders</h4>
+        </div>
+        {/* -------Fiter Order---------- */}
+        <div className="col-8 col-lg-4">
+          <div className="row">
+            <select
+              className="form-select bg-color"
+              name="delivery type"
+              id=""
+              defaultValue={"all"}
+              onChange={(e) => {
+                const filter = e.target.value;
+
+                if (filter === "all") {
+                  setOrders(mainOrders);
+                } else {
+                  const filtered = mainOrders.filter(
+                    (order) =>
+                      order.deliveryType === filter ||
+                      order.orderStatus === parseInt(filter)
+                  );
+                  setOrders(filtered);
+                }
+              }}
+            >
+              <option value="all">All</option>
+              <option value="standard">Standard</option>
+              <option value="fast">Fast</option>
+              <option value="0">Order Placed</option>
+              <option value="1">In Progress</option>
+              <option value="2">Out for Delivery</option>
+              <option value="3">Delivered</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
       {orders.length > 0 ? (
         <>
@@ -70,12 +110,18 @@ const Orders = () => {
                         Total Files: {order?.orderTotalFiles}
                       </div>
                       <div className="col-2 center">
-                        <i className="fa-solid fa-greater-than fa-beat dim"></i>
+                        <i className="fa-solid fa-greater-than fa-bounce dim"></i>
                       </div>
                     </div>
                     <hr />
                     <div className="row my-2 justify-content-between">
-                      <div className="col-4 text-capitalize ms-3">
+                      <div
+                        className={`col-4 text-capitalize ms-3 ${
+                          order?.deliveryType === "fast"
+                            ? "text-danger"
+                            : "text-success"
+                        } `}
+                      >
                         {order?.deliveryType}
                       </div>
                       <div className="col-5 d-flex ">
@@ -131,8 +177,7 @@ const Orders = () => {
           {/* -----------Modal -------------- */}
           {showModalIndex !== null && (
             <div className="modal_wrapper">
-              {console.log(orders[showModalIndex])}
-              <div className="modal_content">
+              <div className="modal_content" ref={modalRef}>
                 <div className="modal_header my-2 row justify-content-between align-items-center">
                   <div className="col-5">
                     <h4 className="dim fs-5 fw-bold">Order Details</h4>
@@ -190,6 +235,11 @@ const Orders = () => {
                         <tr className="dim">
                           <th scope="col">#</th>
                           <th scope="col">FileName</th>
+                          <th scope="col">Quantity</th>
+                          <th scope="col">Color</th>
+                          <th scope="col">B&W</th>
+                          <th scope="col">SingleSide</th>
+                          <th scope="col">BothSide</th>
                         </tr>
                       </thead>
                       {orders[showModalIndex].orderItems.map((item, i) => {
@@ -198,9 +248,36 @@ const Orders = () => {
                             <tr>
                               <th scope="row">{i + 1}</th>
 
-                              <td data-cell={`File ${i + 1}`} className="mt-2">
-                                {item.filename + "   (" + item.pages + ") "}
+                              <td
+                                data-cell={`File ${i + 1}`}
+                                className="mt-2 dim"
+                              >
+                                {item.filename}
                               </td>
+                              <td data-cell="Quantity" className="mt-2 ">
+                                {item.quantity}
+                              </td>
+
+                              {item.color && (
+                                <td data-cell="Color" className="mt-2">
+                                  Yes
+                                </td>
+                              )}
+                              {item.blackandwhite && (
+                                <td data-cell="B&W" className="mt-2">
+                                  Yes
+                                </td>
+                              )}
+                              {item.singleSide && (
+                                <td data-cell="single" className="mt-2">
+                                  Yes
+                                </td>
+                              )}
+                              {item.bothSide && (
+                                <td data-cell="Both" className="mt-2">
+                                  Yes
+                                </td>
+                              )}
                             </tr>
                           </tbody>
                         );
@@ -247,11 +324,13 @@ const Orders = () => {
           <HashLoader color="#5b4af1" size={70} />
         </div>
       ) : (
-        <div className="col-lg-6">
-          <h4 className="dim center fs-4">Orders</h4>
-          <div className="card my-1">
-            <div className="card-body">
-              <h5 className="card-title">No Orders</h5>
+        <div className="row center my-5 bg-color">
+          <div className="col-lg-4 col-12 ">
+            <h4 className="dim center fs-4">Orders</h4>
+            <div className="card my-1 bg-color my-3">
+              <div className="card-body">
+                <h5 className="card-title">No Orders</h5>
+              </div>
             </div>
           </div>
         </div>
