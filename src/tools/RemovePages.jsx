@@ -79,7 +79,7 @@ export default function RemovePages() {
           <span className="dim fw-bold fs-5">
             Total Pages : {pdfPagesCount}
           </span>
-          <label htmlFor="remove-pages" className="u-f-b">
+          <label htmlFor="remove-pages" className="u-f-b center">
             {pdfPagesCount === 0 ? "Upload Files" : "Upload More?"}
             <input
               type="file"

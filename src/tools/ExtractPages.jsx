@@ -109,7 +109,7 @@ export default function ExtractPages() {
           <motion.label
             whileHover={{ scale: 1.1 }}
             htmlFor="extract-pdf"
-            className="u-f-b"
+            className="u-f-b center"
           >
             {pdfFileData ? "Upload More?" : "Upload Files"}
             <input

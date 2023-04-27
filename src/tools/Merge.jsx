@@ -71,7 +71,7 @@ const Merger = () => {
           <motion.label
             whileHover={{ scale: 1.05 }}
             htmlFor="mergePdf"
-            className="u-f-b my-3"
+            className="u-f-b my-3 center"
           >
             {files.length === 0 || files.length === 1
               ? "Upload Files"

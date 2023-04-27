@@ -95,7 +95,7 @@ function App() {
           <motion.label
             whileHover={{ scale: 1.1 }}
             htmlFor="formFileLg"
-            className="u-f-b choosefile m-2"
+            className="u-f-b choosefile m-2 center"
           >
             {images.length === 0 ? "Upload Files" : "Upload More?"}
             <input

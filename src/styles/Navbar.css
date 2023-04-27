@@ -35,6 +35,7 @@
 
 .link-name {
   display: none;
+  text-transform: capitalize;
 }
 
 .brand {
