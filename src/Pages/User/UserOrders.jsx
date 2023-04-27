@@ -236,13 +236,13 @@ const Orders = () => {
                           <th scope="col">#</th>
                           <th scope="col">FileName</th>
                           <th scope="col">Quantity</th>
-                          <th scope="col">Color</th>
-                          <th scope="col">B&W</th>
-                          <th scope="col">SingleSide</th>
-                          <th scope="col">BothSide</th>
+                          <th scope="col">Page</th>
+                          <th scope="col">Side</th>
+                          <th scope="col">Extra</th>
                         </tr>
                       </thead>
                       {orders[showModalIndex].orderItems.map((item, i) => {
+                        console.log(item)
                         return (
                           <tbody key={i}>
                             <tr>
@@ -258,26 +258,44 @@ const Orders = () => {
                                 {item.quantity}
                               </td>
 
-                              {item.color && (
+                              {item?.color ? (
                                 <td data-cell="Color" className="mt-2">
-                                  Yes
+                                  Color
                                 </td>
-                              )}
-                              {item.blackandwhite && (
+                              ):(
                                 <td data-cell="B&W" className="mt-2">
-                                  Yes
+                                  B&W 
                                 </td>
+
                               )}
-                              {item.singleSide && (
+                             
+                              {item.singleSide ? (
                                 <td data-cell="single" className="mt-2">
-                                  Yes
+                                  Single
+                                </td>
+                              ):(
+                                <td data-cell="both" className="mt-2">
+                                  Both
                                 </td>
                               )}
-                              {item.bothSide && (
-                                <td data-cell="Both" className="mt-2">
-                                  Yes
+
+                              {item?.plasticCover ? (
+                                <td data-cell="cover" className="mt-2">
+                                  Cover
                                 </td>
+                              ): item?.spiralBind ? (
+                                <td data-cell="spiral" className="mt-2">
+                                  Spiral
+
+                                </td>
+
+                              ):(
+                                <td data-cell="none" className="mt-2">
+                                  None
+                                </td>
+                                
                               )}
+                              
                             </tr>
                           </tbody>
                         );
