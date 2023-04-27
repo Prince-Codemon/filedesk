@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { lazy, Suspense } from "react";
 import { motion, useScroll } from "framer-motion";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -41,7 +41,6 @@ const scrollToBottom = () => {
 
 const App = () => {
   const { scrollYProgress } = useScroll();
-  useEffect(() => {}, [localStorage]);
   return (
     <>
       <Router>
