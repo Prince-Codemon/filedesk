@@ -4,6 +4,28 @@ import moment from "moment";
 import { HashLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
 import io from 'socket.io-client'
+
+
+const nofityMe = (title, desc) => {
+  Notification.requestPermission().then((permission) => {
+    if (permission === "granted") {
+      new Notification(title, {
+        body: desc,
+        icon: "./images/tools_header.jpg"
+      })
+    }
+    else {
+      toast.error("Notification Permission Denied")
+    }
+  })
+}
+
+const statusValues = {
+  0: "Placed",
+  1: "Processing",
+  2: "Out for delivery",
+  3: "Delivered",
+}
 const Orders = () => {
   const modalRef = useRef(null);
   const [orders, setOrders] = useState([]);
@@ -11,6 +33,7 @@ const Orders = () => {
   const [loading, setLoading] = useState(false);
   const [showModalIndex, setShowModalIndex] = useState(null);
   const token = getToken();
+
 
   useEffect(() => {
     const socket = io(process.env.REACT_APP_SERVER_URL);
@@ -23,6 +46,7 @@ const Orders = () => {
       setOrders(preOrders => {
         return preOrders.map(order => {
           if (order._id === data.orderId) {
+            nofityMe("Order Status Updated", `Your order status is ${statusValues[data.orderStatus]}`);
             return { ...order, orderStatus: data.orderStatus };
           }
           return order;

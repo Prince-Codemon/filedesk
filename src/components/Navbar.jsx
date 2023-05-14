@@ -132,23 +132,25 @@ const Navbar = ({ scrollToTop }) => {
             </>
           )}
 
-          <Link
-            to="/orders"
-            className={`links ${sw > 500 ? "tt" : ""} ${
-              activeLink === "orders"
-                ? "stroke shadow-in p-2 roundedBorder"
-                : "stroke-grey"
-            }`}
-            data-tooltip="Orders"
-            onClick={() => handleLinkClick("orders")}
-          >
-            <i
-              className={`p-2  fa-solid fa-bag-shopping ${
-                activeLink === "orders" ? "stroke fa-beat p-1" : ""
-              }`}
-            ></i>
-            <span className="link-name px-3">Orders</span>
-          </Link>
+          {
+            token && (
+              <Link
+                to="/orders"
+                className={`links ${sw > 500 ? "tt" : ""} ${activeLink === "orders"
+                    ? "stroke shadow-in p-2 roundedBorder"
+                    : "stroke-grey"
+                  }`}
+                data-tooltip="Orders"
+                onClick={() => handleLinkClick("orders")}
+              >
+                <i
+                  className={`p-2  fa-solid fa-bag-shopping ${activeLink === "orders" ? "stroke fa-beat p-1" : ""
+                    }`}
+                ></i>
+                <span className="link-name px-3">Orders</span>
+              </Link>
+            )
+          }
 
           {token ? (
             <Link
