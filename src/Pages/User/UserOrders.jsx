@@ -3,16 +3,36 @@ import getToken from "../../utils/getToken";
 import moment from "moment";
 import { HashLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
-
+import io from 'socket.io-client'
 const Orders = () => {
   const modalRef = useRef(null);
   const [orders, setOrders] = useState([]);
-  const [mainOrders, setMainOrders] = useState();
-
+  const [mainOrders, setMainOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModalIndex, setShowModalIndex] = useState(null);
-
   const token = getToken();
+
+  useEffect(() => {
+    const socket = io(process.env.REACT_APP_SERVER_URL);
+
+    socket.on('statusUpdated', (data) => {
+
+      if (data?.orderStatus === null && !data?.orderId === null) {
+        return;
+      }
+      setOrders(preOrders => {
+        return preOrders.map(order => {
+          if (order._id === data.orderId) {
+            return { ...order, orderStatus: data.orderStatus };
+          }
+          return order;
+        })
+      })
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   const fetchOrders = async () => {
     setLoading(true);
     const data = await fetch(
@@ -41,7 +61,7 @@ const Orders = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  function handleClickOutside(event) {
+  function handleClickOutside (event) {
     if (modalRef.current && !modalRef.current.contains(event.target)) {
       console.log("heel");
       setShowModalIndex(null);
@@ -64,7 +84,6 @@ const Orders = () => {
               defaultValue={"all"}
               onChange={(e) => {
                 const filter = e.target.value;
-
                 if (filter === "all") {
                   setOrders(mainOrders);
                 } else {
@@ -89,7 +108,7 @@ const Orders = () => {
         </div>
       </div>
 
-      {orders.length > 0 ? (
+      {orders?.length > 0 ? (
         <>
           <div className="row d-flex justify-content-around">
             {orders.map((order, i) => {
@@ -97,9 +116,8 @@ const Orders = () => {
                 <div key={i} className="col-lg-5 col-sm-12">
                   <div
                     onClick={() => setShowModalIndex(i)}
-                    className={`card my-4 ${
-                      window.screen.width < 500 ? "ps-1" : "ps-4 "
-                    } py-2 bg-color border-none shadow-out pointer shadow-btn`}
+                    className={`card my-4 ${window.screen.width < 500 ? "ps-1" : "ps-4 "
+                      } py-2 bg-color border-none shadow-out pointer shadow-btn`}
                     key={i}
                   >
                     <div className="time row my-1 justify-content-around">
@@ -116,15 +134,39 @@ const Orders = () => {
                     <hr />
                     <div className="row my-2 justify-content-between">
                       <div
-                        className={`col-4 text-capitalize ms-3 ${
-                          order?.deliveryType === "fast"
-                            ? "text-danger"
-                            : "text-success"
-                        } `}
+                        className={`col-4 text-capitalize ms-3 ${order?.deliveryType === "fast"
+                          ? "text-danger"
+                          : "text-success"
+                          } `}
                       >
                         {order?.deliveryType}
                       </div>
-                      <div className="col-5 d-flex ">
+                      <div className="col-4 text-capitalize ms-3">
+                        {order?.orderStatus === 0 ? (
+                          <span className="text-success">
+                            <i className="fa-solid fa-circle-check fa-beat mx-2"></i>
+                            <span className="">Order Placed</span>
+                          </span>
+                        ) : order?.orderStatus === 1 ? (
+                          <span className="text-success">
+                            <i className="fa-solid fa-spinner fa-spin-pulse  mx-2"></i>
+                            <span className="">In Progress</span>
+                          </span>
+                        ) : order?.orderStatus === 2 ? (
+                          <span className="text-success">
+                            <i className="fa-solid fa-truck mx-2 fa-fade"></i>
+                            Out for Delivery
+                          </span>
+                        ) : order?.orderStatus === 3 ? (
+                          <>
+                            <span className=" text-success">
+                              <i className="fa-solid fa-circle-check mx-2"></i>
+                              Delivered
+                            </span>
+                          </>
+                        ) : null}
+                      </div>
+                      <div className="col-5 d-flex mx-3 ">
                         Price : &nbsp;<i className="fa-solid fa-inr center"></i>
                         &nbsp;
                         {" " + order?.orderTotal}
@@ -143,9 +185,8 @@ const Orders = () => {
                       <div className="col-2 d-flex flex-column align-items-center">
                         <button
                           title="Copy Order ID"
-                          className={`border-none my-1 ${
-                            window.screen.width < 500 ? "ms-1" : "mx-3"
-                          }  shadow-btn copy roundedBorder`}
+                          className={`border-none my-1 ${window.screen.width < 500 ? "ms-1" : "mx-3"
+                            }  shadow-btn copy roundedBorder`}
                           onClick={() => {
                             navigator.clipboard.writeText(order?.orderId);
                             toast.success("Order ID Copied");
@@ -155,9 +196,8 @@ const Orders = () => {
                         </button>
                         <button
                           title="Copy Payment ID"
-                          className={`border-none ${
-                            window.screen.width < 500 ? "ms-1" : "mx-3"
-                          }  shadow-btn copy roundedBorder`}
+                          className={`border-none ${window.screen.width < 500 ? "ms-1" : "mx-3"
+                            }  shadow-btn copy roundedBorder`}
                           onClick={() => {
                             navigator.clipboard.writeText(
                               order?.orderPaymentId
@@ -242,7 +282,7 @@ const Orders = () => {
                         </tr>
                       </thead>
                       {orders[showModalIndex].orderItems.map((item, i) => {
-                        console.log(item)
+
                         return (
                           <tbody key={i}>
                             <tr>
@@ -262,18 +302,18 @@ const Orders = () => {
                                 <td data-cell="Color" className="mt-2">
                                   Color
                                 </td>
-                              ):(
+                              ) : (
                                 <td data-cell="B&W" className="mt-2">
-                                  B&W 
+                                  B&W
                                 </td>
 
                               )}
-                             
+
                               {item.singleSide ? (
                                 <td data-cell="single" className="mt-2">
                                   Single
                                 </td>
-                              ):(
+                              ) : (
                                 <td data-cell="both" className="mt-2">
                                   Both
                                 </td>
@@ -283,19 +323,19 @@ const Orders = () => {
                                 <td data-cell="cover" className="mt-2">
                                   Cover
                                 </td>
-                              ): item?.spiralBind ? (
+                              ) : item?.spiralBind ? (
                                 <td data-cell="spiral" className="mt-2">
                                   Spiral
 
                                 </td>
 
-                              ):(
+                              ) : (
                                 <td data-cell="none" className="mt-2">
                                   None
                                 </td>
-                                
+
                               )}
-                              
+
                             </tr>
                           </tbody>
                         );
