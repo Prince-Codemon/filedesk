@@ -421,7 +421,7 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
                         id="formFileLg"
                         type="file"
                         onChange={handleFileChange}
-                        accept="application/pdf, .pdf"
+                        accept=".pdf"
                       />
                     </motion.label>
                   ) : null}
