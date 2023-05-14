@@ -36,6 +36,7 @@ const Orders = () => {
 
 
   useEffect(() => {
+    Notification.requestPermission()
     const socket = io(process.env.REACT_APP_SERVER_URL);
 
     socket.on('statusUpdated', (data) => {
